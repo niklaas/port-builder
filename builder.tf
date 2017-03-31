@@ -79,7 +79,7 @@ resource "aws_instance" "freebsd-builder" {
     instance_initiated_shutdown_behavior = "terminate"
 
     root_block_device = {
-        volume_size = "20"
+        volume_size = "10"
         delete_on_termination = "true"
     }
 
