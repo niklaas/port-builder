@@ -1,0 +1,6 @@
+#!/bin/sh
+
+zpool create poudriere /dev/sdb
+zfs create poudriere/usr/local/poudriere
+
+# vim:set ft=sh:

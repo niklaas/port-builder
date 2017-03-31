@@ -62,6 +62,12 @@ provider "aws" {
     secret_key = "${var.aws_secret_key}"
 }
 
+resource "aws_volume_attachment" "poudriere" {
+    device_name = "/dev/sdb"
+    volume_id = "${aws_ebs_volume.poudriere.id}"
+    instance_id = "${aws_instance.freebsd-builder.id}"
+}
+
 resource "aws_instance" "freebsd-builder" {
     # TODO: make this map to different regions
     ami           = "ami-2352ae4c"    # FreeBSD 11.0-RELEASE
@@ -120,4 +126,9 @@ resource "aws_instance" "freebsd-builder" {
             "chmod +x       /tmp/port-builder/bin/*",
         ]
     }
+}
+
+resource "aws_ebs_volume" "poudriere" {
+    availability_zone = "${aws_instance.freebsd-builder.availability_zone}"
+    size = 20
 }
