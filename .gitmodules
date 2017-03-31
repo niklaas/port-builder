@@ -1,0 +1,3 @@
+[submodule "uploads/ports/freebsd-ports"]
+	path = uploads/ports/default
+	url = https://github.com/niklaas/freebsd-ports.git

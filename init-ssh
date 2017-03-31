@@ -1,0 +1,1 @@
+ssh -i /home/niklaas/.ssh/ec2-user.pem ec2-user@ec2-54-93-190-174.eu-central-1.compute.amazonaws.com

@@ -1,0 +1,35 @@
+#!/bin/sh
+
+pconfd=/usr/local/etc/poudriere.d
+pdatad=/usr/local/poudriere
+pbdir=/tmp/port-builder
+
+# Ports trees
+for t in default
+do
+    poudriere ports -c -p $t -m svn+https
+
+    # Copies user provided ports to ports tree
+    cp -r $pbdir/ports/$t/*/ /usr/local/poudriere/ports/$t
+
+    # Jails (crossbuilding)
+
+    # Gets /usr/src for building native-xtools
+    fetch -o /tmp ftp://ftp.freebsd.org/pub/FreeBSD/releases/amd64/11.0-RELEASE/src.txz
+    tar -C / -xzvf /tmp/src.txz
+
+	service qemu_user_static onestart
+
+    for j in 11armv6
+    do
+        poudriere jail -c -j $j -a arm.armv6 -v release/11.0.1 -m svn+https -x
+
+        # Sets
+        for z in py35
+        do
+            poudriere bulk -p $t -j $j -z $z -f $pbdir/pkglists/"$z"
+        done
+    done
+done
+
+upload-to-s3
