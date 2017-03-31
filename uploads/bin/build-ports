@@ -10,7 +10,7 @@ do
     poudriere ports -c -p $t -m svn+https
 
     # Copies user provided ports to ports tree
-    cp -r $pbdir/ports/$t/*/ /usr/local/poudriere/ports/$t
+    cp -r $pbdir/ports/$t/* /usr/local/poudriere/ports/$t
 
     # Jails (crossbuilding)
 
