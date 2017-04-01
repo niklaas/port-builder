@@ -12,7 +12,7 @@ variable "instance_types" {
     type = "map"
     default = {
         small = "t2.micro"
-        large = "m3.2xlarge"
+        large = "c3.2xlarge"
     }
 }
 
