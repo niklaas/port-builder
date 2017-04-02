@@ -8,44 +8,27 @@ instance][2] on [Amazon AWS][3]. The machine is created with the help of
 [Terraform][7] and multiple `sh` scripts (to KISS).
 
 The idea was inspired by [JoergFiedler/freebsd-build-machine][5] using
-[Vagrant][6], its [https://github.com/mitchellh/vagrant-aws](AWS
-Provider), and [https://ansible.com](Ansible).
+[Vagrant][6], its [AWS Provider][9], and [Ansible][10].
 
 # Workflow
 
-0. Install Terraform from ...
+0. Install Terraform from [the official download page][8]
 
 1. `terraform apply` on the local machine
 
+2. Once the infrastructure was deployed, run `./init-ssh` to connect to
+   the machine.
+
+3. Start `tmux` and `build-ports`
+
 # Structure of the Skeleton
 
-[uploads/bin/build-ports]
+To be done ...
 
 # Planned Features
 
-* Provision HTTP server (probably www/thttpd) to monitor build process
-* Enable downloading already built packages to prevent rebuilding them
-
-# Issues
-
-## Build works but moving packages doesn't work
-
-At the end of the build:
-
-```
-warning: Skipping file
-/usr/local/poudriere/data/packages/11armv6-default-py35/.latest. File does
-not exist.
-warning: Skipping file
-/usr/local/poudriere/data/packages/11armv6-default-py35/.real_1490130936.
-File does not exist.
-warning: Skipping file
-/usr/local/poudriere/data/logs/bulk/11armv6-default-py35/latest/2017-03-21_21h07m18s.
-File does not exist.
-```
-
-And symbolic links in `/usr/local/poudriere/data/packages` are weird.
-
+- [ ] Provision HTTP server (probably www/thttpd) to monitor build process
+- [ ] Download already built packages from S3 to prevent rebuilding them
 
 
 [1]: https://github.com/freebsd/poudriere
@@ -61,3 +44,9 @@ And symbolic links in `/usr/local/poudriere/data/packages` are weird.
 [6]: https://www.vagrantup.com
 
 [7]: https://www.terraform.io
+
+[8]: https://www.terraform.io/downloads.html
+
+[9]: https://github.com/mitchellh/vagrant-aws
+
+[10]: https://ansible.com
