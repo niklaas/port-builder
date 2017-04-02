@@ -7,7 +7,7 @@ pbdir=/tmp/port-builder
 # Ports trees
 for t in default
 do
-    poudriere ports -c -p $t -m svn+https
+    poudriere ports -c -p $t
 
     # Copies user provided ports to ports tree
     cp -r $pbdir/ports/$t/* /usr/local/poudriere/ports/$t
@@ -25,7 +25,7 @@ do
         poudriere jail -c -j $j -a arm.armv6 -v release/11.0.1 -m svn+https -x
 
         # Sets
-        for z in py35
+        for z in py35 default
         do
             poudriere bulk -p $t -j $j -z $z -f $pbdir/pkglists/"$z"
         done
