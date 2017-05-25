@@ -1,4 +1,0 @@
-[submodule "uploads/ports/default"]
-	path = uploads/ports/default
-	url = https://github.com/niklaas/freebsd-ports.git
-    ignore = dirty
