@@ -12,18 +12,39 @@ The idea was inspired by [JoergFiedler/freebsd-build-machine][5] using
 
 # Workflow
 
-0. Install Terraform from [the official download page][8]
+0. Install Terraform from [the official download page][8].
 
-1. `terraform apply` on the local machine
+1. `cd` into the directory of this skeleton.
 
-2. Once the infrastructure was deployed, run `./init-ssh` to connect to
+2. `terraform apply` on the local machine. This will create the build
+   machine on AWS.
+
+3. Once the infrastructure was deployed, run `./init-ssh` to connect to
    the machine.
 
-3. Start `tmux` and `build-ports`
+4. Your're now on the remote machine. Start `tmux` and run `build-ports`.
 
 # Structure of the Skeleton
 
-To be done ...
+- `builder.tf` is the most important file. It includes the rules for
+  `terraform` on how to create the infrastructure.
+- `init-ssh` is automatically created when deploying the infrastructure. It
+  includes a simple `ssh` command that lets you connect to the correct
+  instance.
+- `templates` includes several template files that are converted according to
+  your configuration/use case when deploying the infrastructure.
+    - The file created from `init.tpl` is passed to the build machine even
+      before it actually started. It configures the machine to install some
+      packages during boot time and sets up `sudo` for the user `ec2-user`.
+    - The file created from `shrc.tpl` sets up environment variables for the
+      user `ec2-user`.
+    - The script created from `upload-to-s3` is used to upload the ports that
+      were built to S3.
+- `uploads` includes several scripts and configuration files that are needed
+  for the machine to build ports properly.
+    - The script `bin/build-ports` is used to build the ports.
+
+Not completed yet... To be done...
 
 # Planned Features
 
