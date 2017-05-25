@@ -1,7 +1,9 @@
-terraform.tfvars
+init-ssh
+ssh/*
 terraform.tfstate
 terraform.tfstate.backup
-ssh/*
-init-ssh
+terraform.tfvars
+uploads/ports/*
+
 uploads/pkglists/*
 !uploads/pkglists/default.example
