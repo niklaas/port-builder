@@ -28,23 +28,28 @@ The idea was inspired by [JoergFiedler/freebsd-build-machine][5] using
 
 - `builder.tf` is the most important file. It includes the rules for
   `terraform` on how to create the infrastructure.
-- `init-ssh` is automatically created when deploying the infrastructure. It
-  includes a simple `ssh` command that lets you connect to the correct
-  instance.
-- `templates` includes several template files that are converted according to
-  your configuration/use case when deploying the infrastructure.
-    - The file created from `init.tpl` is passed to the build machine even
-      before it actually started. It configures the machine to install some
-      packages during boot time and sets up `sudo` for the user `ec2-user`.
-    - The file created from `shrc.tpl` sets up environment variables for the
-      user `ec2-user`.
-    - The script created from `upload-to-s3` is used to upload the ports that
-      were built to S3.
-- `uploads` includes several scripts and configuration files that are needed
-  for the machine to build ports properly.
+- `init-ssh` is automatically created by terraform when deploying the
+  infrastructure. It includes a simple `ssh` command that lets you connect
+  to the correct instance.
+- `templates` includes several template files that are converted according
+  to your configuration/use case when deploying the infrastructure.
+    - The file created from `init.tpl` is passed to the build machine
+      before it actually starts. It configures the machine to install some
+      packages during boot time (as configured in `builder.tf` and sets up
+      `sudo` for the user `ec2-user`.
+    - The file created from `shrc.tpl` sets up environment variables for
+      the user `ec2-user`. This makes interaction with the S3 storage
+      easier.
+    - The script created from `upload-to-s3` is used to upload the
+      compiled packages to S3.
+- `uploads` includes several scripts and configuration files that are
+  needed remotely to build the ports properly.
     - The script `bin/build-ports` is used to build the ports.
-
-Not completed yet... To be done...
+    - `ports/default` can include ports that have not been uploaded to the
+      official ports tree yet. These are added to poudriere's default
+      ports tree, so you can compile them.
+    - `poudriere.conf` is the configuration file for poudriere.
+    - `poudriere.d` includes further configuration for poudriere.
 
 # Planned Features
 
