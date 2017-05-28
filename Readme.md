@@ -16,15 +16,19 @@ The idea was inspired by [JoergFiedler/freebsd-build-machine][5] using
 
 1. `cd` into the directory of this skeleton.
 
-2. `terraform apply` on the local machine. This will create the build
+2. Change the default value of `s3_bucket_name` in `builder.tf` to the
+   name of your S3 bucket. Add your credentials to
+   `terraform.tfvars.example` and rename the file to `terraform.tfvars`.
+
+3. `terraform apply` on the local machine. This will create the build
    machine on AWS.
 
-3. Once the infrastructure was deployed, run `./init-ssh` to connect to
+4. Once the infrastructure was deployed, run `./init-ssh` to connect to
    the machine.
 
-4. Your're now on the remote machine. Start `tmux` and run `build-ports`.
+5. Your're now on the remote machine. Start `tmux` and run `build-ports`.
 
-5. Don't forget to run `terraform destroy` on your local machine once
+6. Don't forget to run `terraform destroy` on your local machine once
    compilation is done. Otherwise your Amazon AWS bill will rise...
 
 # Structure of the Skeleton
