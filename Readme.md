@@ -24,6 +24,9 @@ The idea was inspired by [JoergFiedler/freebsd-build-machine][5] using
 
 4. Your're now on the remote machine. Start `tmux` and run `build-ports`.
 
+5. Don't forget to run `terraform destroy` on your local machine once
+   compilation is done. Otherwise your Amazon AWS bill will rise...
+
 # Structure of the Skeleton
 
 - `builder.tf` is the most important file. It includes the rules for
