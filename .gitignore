@@ -3,7 +3,8 @@ ssh/*
 terraform.tfstate
 terraform.tfstate.backup
 terraform.tfvars
-uploads/ports/*
+uploads/ports/default/*
+!uploads/ports/default/Readme.md
 
 uploads/pkglists/*
 !uploads/pkglists/default.example
