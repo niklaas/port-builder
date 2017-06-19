@@ -2,6 +2,18 @@ variable "s3_bucket_name" {
     default = "klaas-freebsd-packages"
 }
 
+variable "build_trees" {
+    default = "default"
+}
+
+variable "build_jails" {
+    default = "svn+https_11armv6_arm.armv6_release/11.0.1"
+}
+
+variable "build_sets" {
+    default = "default"
+}
+
 variable "aws_access_key" {}
 variable "aws_secret_key" {}
 variable "aws_region" {}
@@ -35,6 +47,16 @@ variable "freebsd_11_0_ami" {
 
 variable "ssh_key" {
     default = "~/.ssh/id_rsa"
+}
+
+data "template_file" "build-ports" {
+    template = "${file("templates/build-ports.tpl")}"
+
+    vars {
+        trees = "${var.build_trees}"
+        jails = "${var.build_jails}"
+        sets  = "${var.build_sets}"
+    }
 }
 
 data "template_file" "init" {
