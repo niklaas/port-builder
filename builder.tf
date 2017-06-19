@@ -16,6 +16,10 @@ variable "instance_types" {
     }
 }
 
+variable "ssh_key" {
+    default = "~/.ssh/id_rsa"
+}
+
 data "template_file" "init" {
     template = "${file("templates/init.tpl")}"
 
@@ -64,7 +68,7 @@ provider "aws" {
 
 resource "aws_key_pair" "port-builder" {
     key_name    = "port-builder"
-    public_key  = "${file("ssh/insecure-deployer.pub")}"
+    public_key  = "${file("${var.ssh_key}.pub")}"
 }
 
 resource "aws_instance" "freebsd-builder" {
@@ -85,12 +89,12 @@ resource "aws_instance" "freebsd-builder" {
     connection {
         type = "ssh"
         user = "ec2-user"
-        private_key = "${file("ssh/insecure-deployer")}"
+        private_key = "${file("${var.ssh_key}")}"
         timeout = "10m"
     }
 
     provisioner "local-exec" {
-        command = "echo ssh -i ssh/insecure-deployer ec2-user@${self.public_dns} > init-ssh && chmod +x init-ssh"
+        command = "echo ssh -i ${var.ssh_key} ec2-user@${self.public_dns} > init-ssh && chmod +x init-ssh"
     }
 
     provisioner "remote-exec" {
