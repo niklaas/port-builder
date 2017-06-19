@@ -11,7 +11,7 @@ variable "computing_power" {}
 variable "instance_types" {
     type = "map"
     default = {
-        small = "t2.micro"
+        micro = "t2.micro"
         large = "c3.2xlarge"
     }
 }
