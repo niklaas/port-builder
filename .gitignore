@@ -1,5 +1,8 @@
 init-ssh
+
 ssh/*
+!ssh/insecure-deployer*
+
 terraform.tfstate
 terraform.tfstate.backup
 terraform.tfvars

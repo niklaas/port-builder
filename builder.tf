@@ -62,11 +62,16 @@ provider "aws" {
     secret_key = "${var.aws_secret_key}"
 }
 
+resource "aws_key_pair" "port-builder" {
+    key_name    = "port-builder"
+    public_key  = "${file("ssh/insecure-deployer.pub")}"
+}
+
 resource "aws_instance" "freebsd-builder" {
     # TODO: make this map to different regions
     ami           = "ami-2352ae4c"    # FreeBSD 11.0-RELEASE
     instance_type = "${lookup(var.instance_types, var.computing_power, "t2.micro")}"
-    key_name      = "ec2-user"
+    key_name      = "${aws_key_pair.port-builder.key_name}"
 
     user_data = "${data.template_file.init.rendered}"
 
@@ -80,12 +85,12 @@ resource "aws_instance" "freebsd-builder" {
     connection {
         type = "ssh"
         user = "ec2-user"
-        private_key = "${file("/home/niklaas/.ssh/ec2-user.pem")}"
+        private_key = "${file("ssh/insecure-deployer")}"
         timeout = "10m"
     }
 
     provisioner "local-exec" {
-        command = "echo ssh -i /home/niklaas/.ssh/ec2-user.pem ec2-user@${self.public_dns} > init-ssh && chmod +x init-ssh"
+        command = "echo ssh -i ssh/insecure-deployer ec2-user@${self.public_dns} > init-ssh && chmod +x init-ssh"
     }
 
     provisioner "remote-exec" {
