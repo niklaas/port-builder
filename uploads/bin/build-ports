@@ -27,7 +27,11 @@ do
         # Sets
         for z in py35 default
         do
-            poudriere bulk -p $t -j $j -z $z -f $pbdir/pkglists/"$z"
+            pkglist=$pbdir/pkglists/$z-$j
+            if [ -e $pkglist ]
+            then
+                poudriere bulk -p $t -j $j -z $z -f $pkglist
+            fi
         done
     done
 done
