@@ -1,5 +1,7 @@
 #!/bin/sh
 
+# TODO: Check if one is root
+
 trees="${trees}"
 jails="${jails}"
 sets="${sets}"
@@ -13,17 +15,21 @@ pbdir=/tmp/port-builder
 for t in $sets
 do
     echo
-    echo "Creating ports tree: $t"
+    echo "--> Creating ports tree: $t"
     echo
 
     poudriere ports -c -p $t
 
     # Copies user provided ports to ports tree
-    test -d $pbdir/ports/$t && cp -r $pbdir/ports/$t/* /usr/local/poudriere/ports/$t
+    test -d $pbdir/ports/$t && cp -vr $pbdir/ports/$t/* /usr/local/poudriere/ports/$t
 
     # If there are jails for ARM prepare for crossbuilding
     case "$jails" in
         *arm*)
+            echo
+            echo "--> Preparing for crossbuilding"
+            echo
+
             # Sets crossbuilding flag
             crossbuilding="-x"
 
@@ -43,10 +49,10 @@ do
         rel=$(echo $j | cut -d '_' -f 4)
 
         echo
-        echo "Creating jail: $name"
-        echo "       method: $method"
-        echo " architecture: $arch"
-        echo "      release: $rel"
+        echo "--> Creating jail: $name"
+        echo "           method: $method"
+        echo "     architecture: $arch"
+        echo "          release: $rel"
         echo
 
         # TODO: I am not sure whether this works bc of $crossbuilding flag at
@@ -56,6 +62,13 @@ do
         # Sets
         for z in $sets
         do
+            echo
+            echo "--> Building ports from list $pkglist"
+            echo "                       tree: $t"
+            echo "                       jail: $name"
+            echo "                        set: $z"
+            echo
+
             pkglist=$pbdir/pkglists/$t-$name-$z
             test -f $pkglist && poudriere bulk -p $t -j $name -z $z -f $pkglist
         done
