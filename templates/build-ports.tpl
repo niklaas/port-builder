@@ -5,7 +5,6 @@ jails="${jails}"
 sets="${sets}"
 
 # TODO: Test if supplied input is correct -- otherwise: exit
-
 pconfd=/usr/local/etc/poudriere.d
 pdatad=/usr/local/poudriere
 pbdir=/tmp/port-builder
@@ -64,3 +63,5 @@ do
 done
 
 upload-to-s3
+
+# vim:set ft=sh:
