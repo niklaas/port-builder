@@ -33,3 +33,7 @@ variable "freebsd_11_0_ami" {
 variable "ssh_key" {
     default = "~/.ssh/id_rsa"
 }
+
+variable "build_trees" { }
+variable "build_jails" { }
+variable "build_sets"  { }

@@ -6,6 +6,16 @@ data "template_file" "init" {
     }
 }
 
+data "template_file" "build-ports" {
+    template = "${file("templates/build-ports.tpl")}"
+
+    vars {
+        trees = "${var.build_trees}"
+        jails = "${var.build_jails}"
+        sets  = "${var.build_sets}"
+    }
+}
+
 data "template_file" "download-from-s3" {
     template = "${file("templates/download-from-s3.tpl")}"
 

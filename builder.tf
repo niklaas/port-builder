@@ -46,6 +46,10 @@ resource "aws_instance" "freebsd-builder" {
     }
 
     provisioner "file" {
+        content     = "${data.template_file.build-ports.rendered}"
+        destination = "/tmp/port-builder/bin/build-ports"
+    }
+    provisioner "file" {
         content     = "${data.template_file.download-from-s3.rendered}"
         destination = "/tmp/port-builder/bin/download-from-s3"
     }
