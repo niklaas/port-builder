@@ -1,3 +1,5 @@
-aws_region = "eu-central-1"
+aws_region     = "INSERT HERE"
 aws_access_key = "INSERT HERE"
 aws_secret_key = "INSERT HERE"
+s3_bucket_name = "INSERT HERE"
+ssh_key        = "~/.ssh/id_rsa"
