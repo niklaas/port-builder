@@ -145,7 +145,7 @@ for hiccups and planned features).
 
 # Terraform's hiccups
 
-- terraform-providers/terraform-provider-aws#22: Instances cannot be
+- terraform-providers/terraform-provider-aws#22 : Instances cannot be
   stopped, they can only be *terminated*.
 
   At the moment, every time the skeleton is used, a new instances is
