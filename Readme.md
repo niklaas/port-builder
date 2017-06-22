@@ -160,6 +160,9 @@ for hiccups and planned features).
   have not succeeded yet (see branch ftr/perm-ebs). This would save a lot
   of time and computing power.
 
+- hashicrop/terraform#13423 : Too many SSH connection attempts result in
+  huge disk usage (at least for me)
+
 # Planned Features
 
 - [ ] Provision HTTP server (probably www/thttpd) to monitor build process
