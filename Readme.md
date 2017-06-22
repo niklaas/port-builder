@@ -105,10 +105,11 @@ for hiccups and planned features).
    the configured `ssh` key and the public DNS record of the build
    machine.
 
-7. Your're now on the remote machine. Start `tmux` and run `build-ports`.
-   This will start the build process (as complicated as you configured
-   it). Depending on the amount of jails and packages that are created,
-   this will take a while. When the build process itself is finished, the
+7. Your're now on the remote machine. Start `tmux` and run `sudo
+   build-ports` (it is important to run this command as root). This will
+   start the build process (as complicated as you configured it).
+   Depending on the amount of jails and packages that are created, this
+   will take a while. When the build process itself is finished, the
    packages packages are uploaded to the S3 bucket.
 
 8. Don't forget to run `terraform destroy` on your local machine once
