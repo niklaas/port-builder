@@ -1,0 +1,22 @@
+#!/bin/sh
+
+pconfd=/usr/local/etc/poudriere.d
+pdatad=/usr/local/poudriere
+pbdir=/tmp/port-builder
+
+# Ports tree
+for t in default
+do
+    poudriere ports -c -p $t
+
+    # Copies user provided ports to ports tree
+    cp -r $pbdir/ports/$t/* $pdatad/ports/$t
+
+    # Jail
+    for j in 11amd64
+    do
+        poudriere jail -c -j $j -v 11.0-RELEASE
+    done
+done
+
+# vim:set ft=sh:

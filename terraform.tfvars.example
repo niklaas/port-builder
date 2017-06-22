@@ -1,0 +1,8 @@
+aws_region     = "INSERT HERE"
+aws_access_key = "INSERT HERE"
+aws_secret_key = "INSERT HERE"
+s3_bucket_name = "INSERT HERE"
+ssh_key        = "~/.ssh/id_rsa"
+build_trees    = "default"
+build_jails    = "svn+https_11armv6_arm.armv6_release/11.0.1"
+build_sets     = "default"
