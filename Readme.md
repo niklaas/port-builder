@@ -138,9 +138,10 @@ for hiccups and planned features).
       compiled packages to S3.
 - `uploads` includes several scripts and configuration files that are
   needed remotely to build the ports properly.
-    - `ports/default` can include ports that have not been uploaded to the
-      official ports tree yet. These are added to poudriere's default
-      ports tree, so you can compile them.
+    - `ports/<tree-name>` can include ports that have not been uploaded to
+      the official ports tree yet. According to the name of the directory,
+      these will be added to the to one of the trees configured by you and
+      created by the builder.
     - `poudriere.conf` is the configuration file for poudriere.
     - `poudriere.d` includes further configuration for poudriere.
 
