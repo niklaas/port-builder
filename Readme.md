@@ -147,47 +147,5 @@ for hiccups and planned features).
 
 # Terraform's hiccups
 
-- terraform-providers/terraform-provider-aws#22 : Instances cannot be
-  stopped, they can only be *terminated*.
-
-  At the moment, every time the skeleton is used, a new instances is
-  created i.e., already created jails, options, packages et cetera are
-  lost. It would be great if, instead of being terminated, the build
-  machine could be stopped as long as it is not in use, thus not costing
-  money. However, when stopping (instead of terminating) a machine no data
-  is lost. When there is need for an upgrade, it could be started and the
-  already built jails were already at hand.
-
-  I started to work around this with reusing a permanent EBS drive but
-  have not succeeded yet (see branch ftr/perm-ebs). This would save a lot
-  of time and computing power.
-
 - hashicrop/terraform#13423 : Too many SSH connection attempts result in
   huge disk usage (at least for me)
-
-# Planned Features
-
-- [ ] Provision HTTP server (probably www/thttpd) to monitor build process
-- [ ] Download already built packages from S3 to prevent rebuilding them
-- [ ] Reuse already built jails
-
-
-[1]: https://github.com/freebsd/poudriere
-
-[2]: https://aws.amazon.com/ec2/instance-types
-
-[3]: https://aws.amazon.com
-
-[4]: https://www.freebsd.org
-
-[5]: https://github.com/JoergFiedler/freebsd-build-machine
-
-[6]: https://www.vagrantup.com
-
-[7]: https://www.terraform.io
-
-[8]: https://www.terraform.io/downloads.html
-
-[9]: https://github.com/mitchellh/vagrant-aws
-
-[10]: https://ansible.com
