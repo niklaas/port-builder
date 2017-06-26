@@ -1,5 +1,0 @@
-#!/bin/sh
-
-zpool import poudriere
-
-# vim: set ft=sh:

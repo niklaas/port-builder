@@ -4,22 +4,35 @@ provider "aws" {
     secret_key = "${var.aws_secret_key}"
 }
 
+data "terraform_remote_state" "storage-poudriere" {
+    backend = "local"
+    config  = {
+        path = "../1-storage/terraform.tfstate"
+    }
+}
+
 resource "aws_key_pair" "port-builder" {
     key_name    = "port-builder"
     public_key  = "${file("${var.ssh_key}.pub")}"
 }
 
+resource "aws_volume_attachment" "poudriere" {
+    device_name = "/dev/xbd5"
+    volume_id   = "${data.terraform_remote_state.storage-poudriere.ebs_id}"
+    instance_id = "${aws_instance.freebsd-builder.id}"
+}
+
 resource "aws_instance" "freebsd-builder" {
-    ami           = "${lookup(var.freebsd_11_0_ami, var.aws_region)}"
-    instance_type = "${lookup(var.instance_types, var.computing_power, "t2.micro")}"
-    key_name      = "${aws_key_pair.port-builder.key_name}"
+    ami               = "${lookup(var.freebsd_11_0_ami, var.aws_region)}"
+    instance_type     = "${lookup(var.instance_types, var.computing_power, "t2.micro")}"
+    key_name          = "${aws_key_pair.port-builder.key_name}"
 
-    user_data     = "${data.template_file.init.rendered}"
+    availability_zone = "${data.terraform_remote_state.storage-poudriere.availability_zone}"
 
-    instance_initiated_shutdown_behavior = "terminate"
+    user_data         = "${data.template_file.init.rendered}"
 
     root_block_device = {
-        volume_size = "20"
+        volume_size           = "10"
         delete_on_termination = "true"
     }
 
