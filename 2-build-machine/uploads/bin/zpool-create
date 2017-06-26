@@ -1,6 +1,6 @@
 #!/bin/sh
 
-zpool create poudriere /dev/xdb5
+zpool create poudriere /dev/xbd5
 zfs create poudriere/usr/local/poudriere
 
 zpool import poudriere

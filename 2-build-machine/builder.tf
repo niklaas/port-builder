@@ -17,7 +17,7 @@ resource "aws_key_pair" "port-builder" {
 }
 
 resource "aws_volume_attachment" "poudriere" {
-    device_name = "/dev/xbd5"
+    device_name = "/dev/sdf"
     volume_id   = "${data.terraform_remote_state.storage-poudriere.ebs_id}"
     instance_id = "${aws_instance.freebsd-builder.id}"
 }
