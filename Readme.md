@@ -150,6 +150,6 @@ for hiccups and planned features).
 
 # Terraform's hiccups
 
-- hashicrop/terraform#13423 : Too many SSH connection attempts result in
+- hashicorp/terraform#13423 : Too many SSH connection attempts result in
   huge disk usage (at least for me) on terraform version 0.9.x . Thus,
   version 0.8.8 should be used.
