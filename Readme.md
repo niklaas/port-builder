@@ -40,6 +40,9 @@ for hiccups and planned features).
 0. Install Terraform from [the official download page][8]. Place it
    somewhere in your `$PATH` to ease execution.
 
+   Note: Because of a bug, I highly recommend using `terraform` version
+   0.8.8 (not the newer 0.9.x branch).
+
 1. Clone this repository to some place of your liking. `cd` into the
    directory of the repository.
 
@@ -148,4 +151,5 @@ for hiccups and planned features).
 # Terraform's hiccups
 
 - hashicrop/terraform#13423 : Too many SSH connection attempts result in
-  huge disk usage (at least for me)
+  huge disk usage (at least for me) on terraform version 0.9.x . Thus,
+  version 0.8.8 should be used.
