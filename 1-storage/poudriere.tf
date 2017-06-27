@@ -1,6 +1,7 @@
-variable "aws_access_key"  { }
-variable "aws_secret_key"  { }
-variable "aws_region"      { }
+variable "aws_access_key" { }
+variable "aws_secret_key" { }
+variable "aws_region"     { }
+variable "ebs_size"       { }
 
 provider "aws" {
     region     = "${var.aws_region}"
@@ -14,7 +15,7 @@ data "aws_availability_zones" "available" {
 
 resource "aws_ebs_volume" "poudriere" {
     availability_zone = "${data.aws_availability_zones.available.names[0]}"
-    size              = 20
+    size              = "${var.ebs_size}"
 }
 
 output "ebs_id" {
