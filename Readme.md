@@ -153,3 +153,25 @@ for hiccups and planned features).
 - hashicorp/terraform#13423 : Too many SSH connection attempts result in
   huge disk usage (at least for me) on terraform version 0.9.x . Thus,
   version 0.8.8 should be used.
+
+
+
+[1]: https://github.com/freebsd/poudriere
+
+[2]: https://aws.amazon.com/ec2/instance-types
+
+[3]: https://aws.amazon.com
+
+[4]: https://www.freebsd.org
+
+[5]: https://github.com/JoergFiedler/freebsd-build-machine
+
+[6]: https://www.vagrantup.com
+
+[7]: https://www.terraform.io
+
+[8]: https://www.terraform.io/downloads.html
+
+[9]: https://github.com/mitchellh/vagrant-aws
+
+[10]: https://ansible.com
