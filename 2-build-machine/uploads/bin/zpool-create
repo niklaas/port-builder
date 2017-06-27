@@ -1,8 +1,14 @@
 #!/bin/sh
 
-zpool create poudriere /dev/xbd5
-zfs create poudriere/usr/local/poudriere
+ZPOOL=tank
 
-zpool import poudriere
+# Creates the initial ZFS pool (only needed when attaching *new* EBS)
+zpool create $ZPOOL /dev/xbd5
+
+# Imports already created zpool
+zpool import $ZPOOL
+
+# Exports zpool
+zpool export $ZPOOL
 
 # vim:set ft=sh:
