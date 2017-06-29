@@ -43,8 +43,14 @@ resource "aws_instance" "freebsd-builder" {
         timeout     = "10m"
     }
 
+    # Creates script for establishing a ssh connection
     provisioner "local-exec" {
         command = "echo ssh -i ${var.ssh_key} ec2-user@${self.public_dns} > init-ssh && chmod +x init-ssh"
+    }
+
+    # Sleeps a bit because the builder will be busy setting-up
+    provisioner "local-exec" {
+        command = "sleep 300"
     }
 
     # Creates temporary directories for port-builder and distfiles
@@ -80,10 +86,27 @@ resource "aws_instance" "freebsd-builder" {
 
     provisioner "remote-exec" {
         inline = [
-            "sudo mkdir -p  /usr/local/etc/poudriere.d/options /var/cache/ccache",
+            "sudo mkdir -p  /usr/local/etc/poudriere.d /var/cache/ccache",
             "sudo cp        /tmp/port-builder/poudriere.conf /usr/local/etc",
             "sudo cp -r     /tmp/port-builder/poudriere.d/*  /usr/local/etc/poudriere.d",
             "chmod +x       /tmp/port-builder/bin/*",
+        ]
+    }
+}
+
+resource "null_resource" "initialisation" {
+    depends_on = ["aws_volume_attachment.poudriere"]
+
+    connection {
+        type = "ssh"
+        host = "${aws_instance.freebsd-builder.public_ip}"
+        user = "ec2-user"
+        private_key = "${file("${var.ssh_key}")}"
+    }
+
+    provisioner "remote-exec" {
+        inline = [
+            "sudo /tmp/port-builder/bin/ebs-init",
         ]
     }
 }
