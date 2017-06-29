@@ -47,17 +47,20 @@ resource "aws_instance" "freebsd-builder" {
         command = "echo ssh -i ${var.ssh_key} ec2-user@${self.public_dns} > init-ssh && chmod +x init-ssh"
     }
 
+    # Creates temporary directories for port-builder and distfiles
     provisioner "remote-exec" {
         inline = [
             "mkdir -p /tmp/port-builder /tmp/distfiles"
         ]
     }
 
+    # Uploads port-builder's necessities
     provisioner "file" {
         source      = "uploads/"
         destination = "/tmp/port-builder"
     }
 
+    # Creates and uploads template files
     provisioner "file" {
         content     = "${data.template_file.build-ports.rendered}"
         destination = "/tmp/port-builder/bin/build-ports"
