@@ -51,16 +51,19 @@ do
         arch=$(echo $j | cut -d '_' -f 3)
         rel=$(echo $j | cut -d '_' -f 4)
 
-        echo
-        echo "--> Creating jail: $name"
-        echo "           method: $method"
-        echo "     architecture: $arch"
-        echo "          release: $rel"
-        echo
+        if [ ! -d $pdatad/jails/$j]
+        then
+            echo
+            echo "--> Creating jail: $name"
+            echo "           method: $method"
+            echo "     architecture: $arch"
+            echo "          release: $rel"
+            echo
 
-        # TODO: I am not sure whether this works bc of $crossbuilding flag at
-        # the end
-        poudriere jail -c -j $name -a $arch -v $rel -m $method $crossbuilding
+            # TODO: I am not sure whether this works bc of $crossbuilding flag at
+            # the end
+            poudriere jail -c -j $name -a $arch -v $rel -m $method $crossbuilding
+        fi
 
         # Sets
         for z in $sets
