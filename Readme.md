@@ -104,7 +104,7 @@ following is a list of things you must take care of manually.
    files can all be set as documented in `poudriere(8)`. The corresponding
    `poudriere.d` directory you can find in `uploads/poudriere.d`.
 
-5. As you might have already notices, the skeleton consists of two parts:
+5. As you might have already noticed, the skeleton consists of two parts:
    `1-storage` and `2-build-machine`. Each of these is, according to
    Terraform's principles, one "layer". The structure makes it possible to
    deploy a consistent, permanent and an inconsistent, temporary part of
@@ -143,7 +143,7 @@ following is a list of things you must take care of manually.
    layer (`1-storage`) because it holds both the EBS and S3 bucket.
 
 10. Let your FreeBSD clients' `pkg` know about the S3 bucket. They can
-    find packages under `https://<s3_bucket_name>/pkg`.
+    find packages under `http://<s3_bucket_URL>/pkg`.
 
 The next time you want to compile packages, you don't need to re-create
 the `1-storage` layer. Only run `terraform apply` on the second layer
