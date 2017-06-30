@@ -9,6 +9,7 @@ output "ebs_id" {
 
 resource "aws_s3_bucket" "packages" {
     bucket = "${var.s3_bucket_name}"
+    region = "${var.aws_region}"
     acl    = "public-read"
 
     website { }
