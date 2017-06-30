@@ -1,17 +1,10 @@
-variable "computing_power" { }
+variable "instance_type"  { }
 
-variable "aws_access_key"  { }
-variable "aws_secret_key"  { }
-variable "aws_region"      { }
-variable "s3_bucket_name"  { }
+variable "aws_access_key" { }
+variable "aws_secret_key" { }
+variable "aws_region"     { }
+variable "s3_bucket_name" { }
 
-variable "instance_types" {
-    type = "map"
-    default = {
-        micro = "t2.micro"
-        large = "c3.2xlarge"
-    }
-}
 
 variable "freebsd_11_0_ami" {
     type = "map"

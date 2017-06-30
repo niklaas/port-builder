@@ -1,11 +1,12 @@
-init-ssh
-
 terraform.tfstate
 terraform.tfstate.backup
-terraform.tfvars
 
-uploads/ports/default/*
-!uploads/ports/default/Readme.md
+/terraform.tfvars
+
+2-build-machine/init-ssh
+
+2-build-machine/uploads/ports/default/*
+!2-build-machine/uploads/ports/default/Readme.md
 
 #uploads/pkglists/*
-!uploads/pkglists/default.example
+!2-build-machine/uploads/pkglists/default.example

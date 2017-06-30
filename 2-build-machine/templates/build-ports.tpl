@@ -14,11 +14,14 @@ pbdir=/tmp/port-builder
 # Ports trees
 for t in $sets
 do
-    echo
-    echo "--> Creating ports tree: $t"
-    echo
+    if [ ! -d $pdatad/ports/$t ]
+    then
+        echo
+        echo "--> Creating ports tree: $t"
+        echo
 
-    poudriere ports -c -p $t
+        poudriere ports -c -p $t
+    fi
 
     # Copies user provided ports to ports tree
     test -d $pbdir/ports/$t && cp -vr $pbdir/ports/$t/* /usr/local/poudriere/ports/$t
@@ -37,7 +40,7 @@ do
             fetch -o /tmp ftp://ftp.freebsd.org/pub/FreeBSD/releases/amd64/11.0-RELEASE/src.txz
             tar -C / -xzvf /tmp/src.txz
 
-            service qemu_user_static onestart
+            service qemu_user_static onestart &>/dev/null
             ;;
     esac
 
@@ -48,16 +51,19 @@ do
         arch=$(echo $j | cut -d '_' -f 3)
         rel=$(echo $j | cut -d '_' -f 4)
 
-        echo
-        echo "--> Creating jail: $name"
-        echo "           method: $method"
-        echo "     architecture: $arch"
-        echo "          release: $rel"
-        echo
+        if [ ! -d $pdatad/jails/$j ]
+        then
+            echo
+            echo "--> Creating jail: $name"
+            echo "           method: $method"
+            echo "     architecture: $arch"
+            echo "          release: $rel"
+            echo
 
-        # TODO: I am not sure whether this works bc of $crossbuilding flag at
-        # the end
-        poudriere jail -c -j $name -a $arch -v $rel -m $method $crossbuilding
+            # TODO: I am not sure whether this works bc of $crossbuilding flag at
+            # the end
+            poudriere jail -c -j $name -a $arch -v $rel -m $method $crossbuilding
+        fi
 
         # Sets
         for z in $sets

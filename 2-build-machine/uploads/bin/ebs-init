@@ -1,0 +1,25 @@
+#!/bin/sh
+#
+# Description: This script initialises the attached EBS drive.
+
+ZPOOL=tank
+
+# Note: It is important to use `zpool import` instead of `zpool status`. If
+# there *is* a pool available but it is detached, `zpool status` will claim
+# that there are no pools available. 
+if zpool import 2>&1 | grep -q "no pools available"
+then
+    # Creates the initial ZFS pool (only needed when attaching *new* EBS)
+    # Note: This will automatically import it
+    echo "Initialising ZFS pool..."
+    zpool create $ZPOOL /dev/xbd5
+elif zpool import 2>&1 | grep -q -e "tank" -e "pool can be imported"
+then
+    # Imports created zpool
+    echo "Importing ZFS pool..."
+    zpool import $ZPOOL
+else
+    echo "Some error occured while creating or importing the ZFS pool."
+    exit 1
+fi
+
