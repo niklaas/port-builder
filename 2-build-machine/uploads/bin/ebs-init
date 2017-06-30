@@ -7,13 +7,13 @@ ZPOOL=tank
 # Note: It is important to use `zpool import` instead of `zpool status`. If
 # there *is* a pool available but it is detached, `zpool status` will claim
 # that there are no pools available. 
-if zpool import | grep -q "no pools available to import"
+if zpool import 2>&1 | grep -q "no pools available"
 then
     # Creates the initial ZFS pool (only needed when attaching *new* EBS)
     # Note: This will automatically import it
     echo "Initialising ZFS pool..."
     zpool create $ZPOOL /dev/xbd5
-elif zpool import | grep -q -e "tank" -e "pool can be imported"
+elif zpool import 2>&1 | grep -q -e "tank" -e "pool can be imported"
 then
     # Imports created zpool
     echo "Importing ZFS pool..."
