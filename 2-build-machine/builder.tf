@@ -87,9 +87,10 @@ resource "aws_instance" "freebsd-builder" {
     provisioner "remote-exec" {
         inline = [
             "sudo mkdir -p  /usr/local/etc/poudriere.d /var/cache/ccache",
+            "chmod +x       /tmp/port-builder/bin/*",
+            "sudo           /tmp/port-builder/bin/download-from-s3",
             "sudo cp        /tmp/port-builder/poudriere.conf /usr/local/etc",
             "sudo cp -r     /tmp/port-builder/poudriere.d/*  /usr/local/etc/poudriere.d",
-            "chmod +x       /tmp/port-builder/bin/*",
         ]
     }
 }
