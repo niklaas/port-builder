@@ -14,10 +14,13 @@ aws s3 sync /usr/local/etc s3://${s3_bucket_name}/pdr \
 # Copies built packages to S3
 for dir in /usr/local/poudriere/data/packages/*/
 do
-    aws s3 sync "$dir.latest/" "s3://${s3_bucket_name}/pkg/$(basename $dir)" \
-        --acl 'public-read'                                                  \
-        --only-show-errors                                                   \
-        --delete
+    if [ -d "$dir" ]
+    then
+        aws s3 sync "$dir.latest/" "s3://${s3_bucket_name}/pkg/$(basename $dir)" \
+            --acl 'public-read'                                                  \
+            --only-show-errors                                                   \
+            --delete
+    fi
 done
 
 # vim:set ft=sh:
