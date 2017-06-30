@@ -14,12 +14,12 @@ pbdir=/tmp/port-builder
 # Ports trees
 for t in $sets
 do
-    echo
-    echo "--> Creating ports tree: $t"
-    echo
-
     if [ ! -d $pdatad/ports/$t ]
     then
+        echo
+        echo "--> Creating ports tree: $t"
+        echo
+
         poudriere ports -c -p $t
     fi
 
