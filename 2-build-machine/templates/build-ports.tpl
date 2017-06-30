@@ -18,7 +18,10 @@ do
     echo "--> Creating ports tree: $t"
     echo
 
-    poudriere ports -c -p $t
+    if [ ! -d $pdatad/ports/$t ]
+    then
+        poudriere ports -c -p $t
+    fi
 
     # Copies user provided ports to ports tree
     test -d $pbdir/ports/$t && cp -vr $pbdir/ports/$t/* /usr/local/poudriere/ports/$t
