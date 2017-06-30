@@ -186,7 +186,7 @@ it stopped the last time.
 
 # Terraform's hiccups
 
-- hashicrop/terraform#13423 : Too many SSH connection attempts result in
+- hashicorp/terraform#13423 : Too many SSH connection attempts result in
   huge disk usage (at least for me)
 
 [1]: https://github.com/freebsd/poudriere
