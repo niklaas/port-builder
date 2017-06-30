@@ -5,9 +5,25 @@ a lot of computational resources. Since mine are sparse, using the cloud
 for building is attractive. This repository provides a skeleton for
 creating a temporary [poudriere][1] build machine running as an [EC2
 instance][2] on [Amazon AWS][3]. The machine is created with the help of
-[Terraform][7] and multiple `sh` scripts. When building is completed, the
-packages are stored on a S3 bucket. Serving the bucket as static website,
-the packages can be made available for any FreeBSD machine.
+[Terraform][7] and multiple `sh` scripts.
+
+The approach offers some outstanding characteristics: The skeleton is
+split into two layers: one for permanent, and one for temporary cloud
+infrastructure -- storage and build machine respectively. While building,
+poudriere's state is saved on an EBS. When building is completed, the
+packages are stored on a S3 bucket. In sum, this offers two huge
+advantages:
+
+1. Since poudriere's state is on an EBS, created ports trees, jails and
+   packages are stored independently from the build machine itself. Thus,
+   you can deploy a very powerful machine in the cloud, use and pay it
+   only as long as you really need it, and destroy it afterwards. The next
+   time you want to compile packages, simply deploy a new instance -- it
+   will re-attach the EBS and already created ports trees, jails, and
+   packages are at hand.
+
+2. Serving the bucket as static website, the packages can be made
+   available for any FreeBSD machine easily.
 
 The idea was inspired by [JoergFiedler/freebsd-build-machine][5] using
 [Vagrant][6], its [AWS Provider][9], and [Ansible][10]. I prefer my
@@ -19,21 +35,20 @@ suggested improvement.
 
 # Prerequisites
 
-Some tasks the skeleton cannot handle for you automagically yet (see below
-for hiccups and planned features).
+Some tasks the skeleton cannot handle for you automagically yet. The
+following is a list of things you must take care of manually.
 
 1. You must subscribe to Amazon AWS and have your "Access Key" and "Secret
    Key" at hand.
 
-2. You need an S3 bucket to store the compiled packages. Take note of the
-   name of the bucket. (To serve the built packages to other FreeBSD
-   machines, enable serving the bucket as static website. While this is
-   not necessary for the build machine to work, it totally makes sense.)
-
-3. Create a SSH keyfile that is not password-protected (with its
+2. Create a SSH keyfile that is not password-protected (with its
    corresponding public key `insecure-keyfile.pub`) e.g., `ssh-keygen -t
    rsa -b 4096 -N '' -f ~/.ssh/insecure-keyfile`. Remember where you put
    that file.
+
+3. You need some basic understanding of Terraform and poudriere. While
+   this skeleton automates a lot, it is not as user-friendly as it should
+   be. So you should be aware of sharp edges.
 
 # Step-by-step Guide
 
@@ -62,9 +77,9 @@ for hiccups and planned features).
      In the example given, `poudriere` will create a ports tree named
      "default". Further it will create a jail with method `svn+https`,
      call it "11armv6", create it according to the `arm.armv6`
-     architecture, and base it on the `release/11.0.1`. As you can see,
-     you supply download method, name, architecture, and release separated
-     by `_`. Last but not least, `poudriere` assumes a set called "default".
+     architecture, and base it on `release/11.0.1`. As you can see, you
+     supply download method, name, architecture, and release separated by
+     `_`. Last but not least, `poudriere` assumes a set called "default".
 
      In these variables you can specify multiple entries each separated by
      space. The build script will iterate through all of them.
@@ -80,42 +95,63 @@ for hiccups and planned features).
    As mentioned previously, the build script will iterate through all
    combinations of `build_trees`, `build_jails`, and `build_sets`.
    However, it will not build anything, if there does not exist
-   a `pkglist` that fits to any combination.
+   a `pkglist` that fits to a combination provided.
 
 4. Configuring what to build exactly is a bit difficult. Nevertheless,
    this makes it possible to build a variety of different package sets and
    preserves the versatility of `poudriere`. Especially custom options,
    port blacklists, custom `poudriere.conf`, `make.conf` and `src.conf`
-   files can all be set as documented in `poudriere(8)`. The `poudriere.d`
-   directory you find in `uploads/poudriere.d`.
+   files can all be set as documented in `poudriere(8)`. The corresponding
+   `poudriere.d` directory you can find in `uploads/poudriere.d`.
 
-5. When configuration is all set you can run `terraform apply` on the
-   local machine. This will create the build machine on AWS. You will be
-   asked to specify the  computing power. You can specify either "micro"
-   or "large", which will either deploy a "t2.micro" or "c3.2xlarge"
-   machine. ("Micro" can be used for testing purposes while "large" should
-   give decent performance for building packages relatively quickly.)
+5. As you might have already notices, the skeleton consists of two parts:
+   `1-storage` and `2-build-machine`. Each of these is, according to
+   Terraform's principles, one "layer". The structure makes it possible to
+   deploy a consistent, permanent and an inconsistent, temporary part of
+   infrastructure in the cloud. The first part creates an EBS and a S3
+   bucket. The EBS will be used for storing a ZFS pool that comprises
+   poudriere's data output (created ports trees, jails, packages, etc.).
+   The S3 bucket is used to store the package repository and poudriere's
+   configuration.
+
+   Thus, when configuration is all set you `cd 1-storage` and run
+   `terraform apply`. You will be asked about the size of the EBS. The
+   size highly depends on the amount of ports trees, jails, and packages
+   you plan to set-up.
    
-   Once deployed, the build machine will automatically install `poudriere`
-   and other packages. Thus, deploying the infrastructure will take some
-   time. Stand by and grab some tea.
+   Next, you `cd ../2-build-machine` and run `terraform apply` to create
+   the build machine. You will be asked to specify the instance type. This
+   mainly depends on the amount of money and time you want to spend. For
+   testing, it makes sense to use an `t2.micro` instance.
 
 6. Once the infrastructure was deployed, run `./init-ssh` to connect to
-   the machine. The file includes an `ssh` connection command that uses
-   the configured `ssh` key and the public DNS record of the build
-   machine.
+   the machine.
 
 7. Your're now on the remote machine. Start `tmux` and run `sudo
    build-ports` (it is important to run this command as root). This will
    start the build process (as complicated as you configured it).
    Depending on the amount of jails and packages that are created, this
    will take a while. When the build process itself is finished, the
-   packages packages are uploaded to the S3 bucket.
+   packages and poudriere's configuration are uploaded to the S3 bucket.
 
-8. Don't forget to run `terraform destroy` on your local machine once
-   compilation is done. Otherwise your Amazon AWS bill will rise...
+8. When you're done, run `sudo zpool export tank` on the remote side. This
+   will release the attached EBS drive. If you don't, the builder cannot
+   be destroyed with the next command.
 
-# Structure of the Skeleton
+9. Don't forget to run `terraform destroy` *within* `2-build-machine`.
+   Otherwise your Amazon AWS bill will rise. Do *not* destroy the first
+   layer (`1-storage`) because it holds both the EBS and S3 bucket.
+
+10. Let your FreeBSD clients' `pkg` know about the S3 bucket. They can
+    find packages under `https://<s3_bucket_name>/pkg`.
+
+The next time you want to compile packages, you don't need to re-create
+the `1-storage` layer. Only run `terraform apply` on the second layer
+`2-build-machine`. When doing so, terraform will re-attach the EBS, the
+build machine will mount the ZFS pool, and compilation can continue where
+it stopped the last time.
+
+# Structure of `2-build-machine`
 
 - `builder.tf` is the most important file. It includes the rules for
   `terraform` on how to create the infrastructure.
@@ -146,30 +182,8 @@ for hiccups and planned features).
 
 # Terraform's hiccups
 
-- terraform-providers/terraform-provider-aws#22 : Instances cannot be
-  stopped, they can only be *terminated*.
-
-  At the moment, every time the skeleton is used, a new instances is
-  created i.e., already created jails, options, packages et cetera are
-  lost. It would be great if, instead of being terminated, the build
-  machine could be stopped as long as it is not in use, thus not costing
-  money. However, when stopping (instead of terminating) a machine no data
-  is lost. When there is need for an upgrade, it could be started and the
-  already built jails were already at hand.
-
-  I started to work around this with reusing a permanent EBS drive but
-  have not succeeded yet (see branch ftr/perm-ebs). This would save a lot
-  of time and computing power.
-
 - hashicrop/terraform#13423 : Too many SSH connection attempts result in
   huge disk usage (at least for me)
-
-# Planned Features
-
-- [ ] Provision HTTP server (probably www/thttpd) to monitor build process
-- [ ] Download already built packages from S3 to prevent rebuilding them
-- [ ] Reuse already built jails
-
 
 [1]: https://github.com/freebsd/poudriere
 
