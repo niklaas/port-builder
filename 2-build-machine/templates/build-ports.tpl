@@ -40,7 +40,7 @@ do
             fetch -o /tmp ftp://ftp.freebsd.org/pub/FreeBSD/releases/amd64/11.0-RELEASE/src.txz
             tar -C / -xzvf /tmp/src.txz
 
-            service qemu_user_static onestart
+            service qemu_user_static onestart &>/dev/null
             ;;
     esac
 
@@ -51,7 +51,7 @@ do
         arch=$(echo $j | cut -d '_' -f 3)
         rel=$(echo $j | cut -d '_' -f 4)
 
-        if [ ! -d $pdatad/jails/$j]
+        if [ ! -d $pdatad/jails/$j ]
         then
             echo
             echo "--> Creating jail: $name"
