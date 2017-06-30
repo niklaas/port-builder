@@ -24,7 +24,7 @@ resource "aws_volume_attachment" "poudriere" {
 
 resource "aws_instance" "freebsd-builder" {
     ami               = "${lookup(var.freebsd_11_0_ami, var.aws_region)}"
-    instance_type     = "${lookup(var.instance_types, var.computing_power, "t2.micro")}"
+    instance_type     = "${var.instance_type}"
     key_name          = "${aws_key_pair.port-builder.key_name}"
 
     availability_zone = "${data.terraform_remote_state.storage-poudriere.availability_zone}"
