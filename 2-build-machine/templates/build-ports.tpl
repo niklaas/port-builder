@@ -14,12 +14,20 @@ pbdir=/tmp/port-builder
 # Ports trees
 for t in $sets
 do
+    # TODO: Update existing (manged!) ports trees
     if [ ! -d $pdatad/ports/$t ]
     then
         echo
         echo "--> Creating ports tree: $t"
         echo
 
+        if poudriere ports -l | tail +2 | cut -wf 1 | grep '^$t$' >/dev/null 2>&1
+        then
+            echo "--> Poudriere claims that ports tree exists but it doesn't."
+            echo "    Deleting the ports tree in poudriere's cache..."
+            poudriere -d -p $t
+            echo
+        fi
         poudriere ports -c -p $t
     fi
 
@@ -60,6 +68,14 @@ do
             echo "          release: $rel"
             echo
 
+            if poudriere jail -l | tail +2 | cut -wf 1 | grep '^$name$' >/dev/null 2>&1
+            then
+                echo "--> Poudriere claims that jail exists but it doesn't."
+                echo "    Deleting the jail in pourdiere's cache..."
+                poudriere -d -j $name
+                echo
+            fi
+
             # TODO: I am not sure whether this works bc of $crossbuilding flag at
             # the end
             poudriere jail -c -j $name -a $arch -v $rel -m $method $crossbuilding
@@ -76,7 +92,13 @@ do
             echo
 
             pkglist=$pbdir/pkglists/$t-$name-$z
-            test -f $pkglist && poudriere bulk -p $t -j $name -z $z -f $pkglist
+
+            if [ -f $pkglist ]
+            then
+                poudriere bulk -p $t -j $name -z $z -f $pkglist
+            else
+                echo "Cannot build ports: No pkglist provided for above combination."
+            fi
         done
     done
 done
