@@ -136,6 +136,15 @@ following is a list of things you must take care of manually.
    mainly depends on the amount of money and time you want to spend. For
    testing, it makes sense to use an `t2.micro` instance.
 
+    * You can find an overview of available instances (and there
+      corresponding key) at [Amazon EC2 Instance
+      Types](https://aws.amazon.com/ec2/instance-types). I recommend general
+      purpose instances such as M4.
+
+    * [AWS Simple Monthly
+      Calculator](http://calculator.s3.amazonaws.com/index.html) can help you
+      to get an idea how much usage might cost.
+
 6. Once the infrastructure was deployed, run `./init-ssh` to connect to
    the machine.
 
