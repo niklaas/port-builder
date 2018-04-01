@@ -41,10 +41,10 @@ following is a list of things you must take care of manually.
 1. You must subscribe to Amazon AWS and have your "Access Key" and "Secret
    Key" at hand.
 
-2. Create a SSH keyfile that is not password-protected (with its
-   corresponding public key `insecure-keyfile.pub`) e.g., `ssh-keygen -t
-   rsa -b 4096 -N '' -f ~/.ssh/insecure-keyfile`. Remember where you put
-   that file.
+2. If you don't have one, create a SSH keyfile that is *not*
+   password-protected (with its corresponding public key
+   `insecure-keyfile.pub`) e.g., `ssh-keygen -t rsa -b 4096 -N '' -f
+   ~/.ssh/insecure-keyfile`. Remember where you put that file.
 
 3. You need some basic understanding of Terraform and poudriere. While
    this skeleton automates a lot, it is not as user-friendly as it should
@@ -68,10 +68,9 @@ following is a list of things you must take care of manually.
      stores the compiled packages. Later you will access these packages
      from there.
 
-   - `ssh_key` is the *private* part of your insecure keyfile i.e., in
-     this case it would be `~/.ssh/insecure-keyfile`. Terraform will
-     upload its public part to AWS and associate it with the build
-     machine.
+   - `ssh_key` is the *private* part of your insecure keyfile i.e., in the
+     case above it would be `~/.ssh/insecure-keyfile`. Terraform will upload
+     its public part to AWS and associate it with the build machine.
 
    - `build_trees`, `build_jails`, and `build_sets` are special as they
      need the most time configuring. Here you start deciding how and which
