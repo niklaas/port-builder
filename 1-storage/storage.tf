@@ -13,5 +13,8 @@ resource "aws_s3_bucket" "packages" {
     force_destroy = "true"
     acl           = "public-read"
 
-    website { }
+    website {
+      index_document = "index.html"
+      error_document = "error.html"
+    }
 }
