@@ -1,6 +1,8 @@
 terraform.tfstate
 terraform.tfstate.backup
 
+.terraform
+
 /terraform.tfvars
 
 2-build-machine/init-ssh
