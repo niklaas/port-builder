@@ -120,6 +120,16 @@ following is a list of things you must take care of manually.
    `terraform apply`. You will be asked about the size of the EBS. The
    size highly depends on the amount of ports trees, jails, and packages
    you plan to set-up.
+
+    * If you want to import an already existing bucket that has a folder
+      structure as required by this script, you can do so by executing
+      `terraform import aws_s3_bucket.packages <bucket-name>` within
+      `1-storage`. This will import the bucket into terraform's current
+      state.
+
+    * The same works for an EBS volume, in case you already created one but
+      lost your terraform state. Execute `terraform import
+      aws_ebs_volume.poudriere <vol-id>` in `1-storage`.
    
    Next, you `cd ../2-build-machine` and run `terraform apply` to create
    the build machine. You will be asked to specify the instance type. This
