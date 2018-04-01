@@ -1,14 +1,4 @@
 terraform.tfstate
 terraform.tfstate.backup
-
 .terraform
-
 /terraform.tfvars
-
-2-build-machine/init-ssh
-
-2-build-machine/uploads/ports/default/*
-!2-build-machine/uploads/ports/default/Readme.md
-
-#uploads/pkglists/*
-!2-build-machine/uploads/pkglists/default.example
