@@ -3,4 +3,5 @@
 /uploads/ports/default/*
 !/uploads/ports/default/Readme.md
 
+/uploads/pkglists/*
 !/uploads/pkglists/default.example
